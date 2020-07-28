@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-// import {Link} from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 
-// const LOGIN_URL = 'http://localhost:3000/login'
 const LOGIN_URL = 'https://lattice-server.herokuapp.com/login'
-
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
-      email: '',
-      password: '',
+      email: 'aaa@ga.co',
+      password: 'chicken',
       errors: ''
      };
   }
@@ -101,9 +98,5 @@ render() {
     );
   }
 }
+
 export default Login;
-
-
-// <button placeholder="submit" type="submit">
-//    Log In
-//  </button>

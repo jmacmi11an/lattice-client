@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Task from './Task'
+
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-// import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-// const SERVER_URL_CARDS = 'http://localhost:3000/cards'
-const SERVER_URL_CARDS = 'https://lattice-server.herokuapp.com/cards'
+import server from '../constants.js'
+
+const SERVER_URL_CARDS = server('cards')
+const SERVER_URL_TASKS = server('tasks')
 
 class CardDeck extends Component {
   constructor() {
@@ -37,9 +38,7 @@ class CardDeck extends Component {
     })
   }
 
-
   render(props) {
-    // console.log(this.props.projectCards.cards)
     return(
       <div className="main">
         <CardContent class="card-container">
@@ -48,10 +47,16 @@ class CardDeck extends Component {
             { this.props.projectCards && this.props.projectCards.cards && this.props.projectCards.cards.map((c, i) =>
               <div id="each-card">
                 <h3 key={ c.id }>{c.name}</h3>
-                <IconButton aria-label="delete">
+                <IconButton
+                  aria-label="delete"
+                  onClick={ () => this.props.deleteCard(c.id)}>
                   <DeleteIcon />
                 </IconButton>
-                <SingleTask cardIndex={i} cards={this.props.projectCards}/>
+                <SingleTask
+                  cardIndex={i}
+                  cardId={c.id}
+                  cards={this.props.projectCards}
+                  deleteTask={this.props.deleteTask}/>
                 <Task cardIndex={i} updateTasks={this.props.updateTasks}/>
               </div>
             )}
@@ -103,7 +108,9 @@ class SingleTask extends Component {
         {this.props.cards.cards[this.props.cardIndex].tasks.map((t) =>
           <div class="task-container">
             <textarea key={t.id}>{t.description}</textarea>
-            <IconButton aria-label="delete">
+            <IconButton
+              aria-label="delete"
+              onClick={ () => this.props.deleteTask(this.props.cardId, this.props.cardIndex, t.id)}>
               <DeleteIcon />
             </IconButton>
           </div>

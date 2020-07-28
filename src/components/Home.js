@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-// import {Link} from 'react-router-dom'
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import Login from './registrations/Login'
 import Signup from './registrations/Signup'
 import Lattice from './Lattice';
 
-
-// const LOGOUT_URL = 'http://localhost:3000/logout'
 const LOGOUT_URL = 'https://lattice-server.herokuapp.com/logout'
 
 
@@ -20,21 +17,21 @@ class Home extends Component {
     }
   }
 
-    handleClick = () => {
-      axios.delete(LOGOUT_URL, {withCredentials: true})
-       .then(response => {
-         this.props.handleLogout()
-         this.props.history.push('/')
-       })
-     .catch(error => console.log(error))
-    }
+  handleClick = () => {
+    axios.delete(LOGOUT_URL, {withCredentials: true})
+     .then(response => {
+       this.props.handleLogout()
+       this.props.history.push('/')
+     })
+   .catch(error => console.log(error))
+  }
 
-    toggleSignup = () => this.setState({showingSignup: true, showingLogin: false })
-    toggleLogin = () => this.setState({showingSignup: false, showingLogin: true })
+  toggleSignup = () => this.setState({showingSignup: true, showingLogin: false })
+  toggleLogin = () => this.setState({showingSignup: false, showingLogin: true })
 
 
   render() {
-  return (
+    return (
       <div>
         {
           this.props.loggedInStatus
@@ -66,7 +63,6 @@ class Home extends Component {
         {
           this.props.loggedInStatus
           ? <div>
-
               <header class="titlebar">
                 <div class="title">
                   <h1>LATTICE: Trello Clone Project</h1>
@@ -76,8 +72,7 @@ class Home extends Component {
                   <Button
                     variant="contained"
                     to='/logout'
-                    onClick={this.handleClick}
-                  >
+                    onClick={ this.handleClick }>
                     Log Out
                   </Button>
                 </div>

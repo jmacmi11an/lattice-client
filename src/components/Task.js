@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import server from '../constants.js'
 
-// const SERVER_URL_TASKS = 'http://localhost:3000/tasks'
-const SERVER_URL_TASKS = 'https://lattice-server.herokuapp.com/tasks'
+const SERVER_URL_TASKS = server('tasks')
 
 class Task extends Component {
   constructor() {
@@ -12,8 +12,6 @@ class Task extends Component {
     }
     this.saveTaskDetailChange = this.saveTaskDetailChange.bind(this);
   }
-
-
 
   saveTaskDetailChange(detail) {
     if (detail === ''){
@@ -29,13 +27,13 @@ class Task extends Component {
     } );
   }
 
-
   render() {
     return(
       <TaskForm onBlur={ this.saveTaskDetailChange }/>
     );
   }
 }
+
 
 class TaskForm extends Component {
   constructor() {
@@ -67,7 +65,6 @@ class TaskForm extends Component {
           onBlur={ this._handleTaskSubmit }>
         </textarea>
       </div>
-
     );
   }
 }

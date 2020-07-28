@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CardDeck from './CardDeck'
 
-//from here is new and is just styling
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-// const SERVER_URL_PROJECTS = 'http://localhost:3000/projects'
-const SERVER_URL_PROJECTS = 'https://lattice-server.herokuapp.com/projects';
+import server from '../constants.js'
+
+const SERVER_URL_PROJECTS = server('projects')
+const SERVER_URL_CARDS = server('cards')
+const SERVER_URL_TASKS = server('tasks')
 
 class Lattice extends Component {
   constructor() {
@@ -36,10 +37,12 @@ class Lattice extends Component {
     this.changeCurrentlyRenderingTasks = this.changeCurrentlyRenderingTasks.bind(this)
     this.changeCurrentlyRenderingCards = this.changeCurrentlyRenderingCards.bind(this)
     this.deleteProject = this.deleteProject.bind(this)
+    this.deleteTask = this.deleteTask.bind(this)
+    this.deleteCard = this.deleteCard.bind(this)
     this.fetchProjects = fetchProjects
   }
 
-  changeCurrentlyRenderingTasks(cardIndex, task){
+  changeCurrentlyRenderingTasks(cardIndex, task) {
     const newCards = this.state.currentlyRendering.cards.slice(0) //copying
     newCards[cardIndex].tasks.push(task)
 
@@ -51,7 +54,40 @@ class Lattice extends Component {
     })
   }
 
-  changeCurrentlyRenderingCards(card){
+  async deleteTask(cardId, cardIndex, taskId) {
+    await axios.delete(SERVER_URL_TASKS + taskId, {withCredentials:true})
+
+    let newCards = this.state.currentlyRendering.cards.slice(0)
+    newCards.forEach((item, i) => {
+      if (item.id === cardId) {
+        item.tasks.splice(cardIndex, 1)
+      }
+    });
+
+    this.setState( {
+      currentlyRendering: {
+        ...this.state.currentlyRendering,
+        cards: newCards
+      }
+    })
+  }
+
+  async deleteCard(cardIndex, index) {
+    await axios.delete(SERVER_URL_CARDS + cardIndex, {withCredentials:true})
+
+    let newCards = this.state.currentlyRendering.cards.slice(0)
+    newCards = newCards.filter(c => c.id !== cardIndex)
+    console.log(cardIndex, newCards)
+
+    this.setState( {
+      currentlyRendering: {
+        ...this.state.currentlyRendering,
+        cards: newCards
+      }
+    })
+  }
+
+  changeCurrentlyRenderingCards(card) {
     this.setState(prevState => ({
       ...prevState,
       currentlyRendering: {
@@ -70,16 +106,16 @@ class Lattice extends Component {
       })
     }
 
-  changeCurrentlyRendering(index){
-    this.setState({name: this.state.name, currentlyRendering: this.state.name[index]})
+  changeCurrentlyRendering(index) {
+    this.setState({ name: this.state.name, currentlyRendering: this.state.name[index] })
   }
 
   deleteProject(index){
-    const deleteURL = SERVER_URL_PROJECTS + `/${index}`
+    const deleteURL = SERVER_URL_PROJECTS + `/${ index }`
     fetch(deleteURL, {
       method: "DELETE"
     }).then(() => {
-      for (let i = 0; i < this.state.name.length; i++){
+      for (let i = 0; i < this.state.name.length; i++) {
         if (this.state.name[i].id === index){
           let projects = this.state.name;
           projects.splice(i, 1)
@@ -98,19 +134,22 @@ class Lattice extends Component {
             className="aside-form" />
         </div>
 
-          <ProjectList
-            pickProject={ this.changeCurrentlyRendering}
-            name={ this.state.name }
-            projectInFocus={ this.state.currentlyRendering }
-            updateTasks={this.changeCurrentlyRenderingTasks}
-            updateCards={this.changeCurrentlyRenderingCards}
-            deleteProject={this.deleteProject}
-          />
+        <ProjectList
+          name={ this.state.name }
+          pickProject={ this.changeCurrentlyRendering }
+          projectInFocus={ this.state.currentlyRendering }
+          deleteProject={ this.deleteProject }
+          updateCards={ this.changeCurrentlyRenderingCards }
+          deleteCard={ this.deleteCard }
+          updateTasks={ this.changeCurrentlyRenderingTasks }
+          deleteTask={ this.deleteTask }
+        />
 
       </div>
     );
   }
 }
+
 
 class ProjectForm extends Component {
   constructor() {
@@ -121,14 +160,13 @@ class ProjectForm extends Component {
   }
 
   _handleChange(event) {
-    this.setState({newProject: event.target.value});
+    this.setState({ newProject: event.target.value} );
   }
 
   _handleSubmit(event) {
-    console.log(this.state.newProject)
     event.preventDefault();
     this.props.onSubmit( this.state.newProject );
-    this.setState({newProject: ''});
+    this.setState({ newProject: '' });
   }
 
   render() {
@@ -148,33 +186,34 @@ class ProjectForm extends Component {
   }
 }
 
+
 const ProjectList = (props) => {
   return (
-  <List component="nav" className="main_aside">
-    <div class="projects">
-        { props.name.map( (p, i) =>
-          <div>
-            <ListItem
-              button
-              onClick={ () => props.pickProject(i) }
-              key={ p.id }>
-              <ListItemText
-              primary={ p.name} />
-               <IconButton aria-label="delete">
-                 <DeleteIcon />
-               </IconButton>
-            </ListItem>
+    <List component="nav" className="main_aside">
+      <div class="projects">
+          { props.name.map( (p, i) =>
+            <div>
+              <ListItem
+                button
+                onClick={ () => props.pickProject(i) }
+                key={ p.id }>
+              <ListItemText primary={ p.name } />
+                 <IconButton aria-label="delete" onClick={ () => props.deleteProject(p.id) }>
+                   <DeleteIcon />
+                 </IconButton>
+              </ListItem>
 
-          </div> )}
-    </div>
-        <CardDeck
-          allCards={props.name}
-          projectCards={ props.projectInFocus }
-          updateTasks={props.updateTasks}
-          updateCards={props.updateCards}
-        />
-
-  </List>
+            </div> )}
+      </div>
+          <CardDeck
+            allCards={ props.name }
+            projectCards={ props.projectInFocus }
+            updateCards={ props.updateCards }
+            deleteCard={ props.deleteCard }
+            updateTasks={ props.updateTasks }
+            deleteTask={ props.deleteTask }
+          />
+    </List>
   );
 };
 
