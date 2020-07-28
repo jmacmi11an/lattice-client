@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
+  background-color: #026aa7;
 }
 
 header {
@@ -25,68 +26,71 @@ title {
   top: 1.5em;
 }
 
-/* .project {
-  display: grid;
-  background-color: #7a869a;
-  width: 400px;
-
-} */
-
-/* .main {
-  display: flex;
-  flex-direction: row;
-
-} */
-
-/* .MuiCardContent-root {
+form {
   display: inline-block;
-  background-color: #eceff1;
-  border-radius: 8px;
-
-} */
-
-/* .MuiCardContent-root {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-} */
-
+  color: #fafafa;
+}
 
 .login-input {
   padding-left: 2em;
 }
 
-.main-aside {
+.main_aside {
+  display: flex;
+  background-color: #eceff1;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.5);
+  margin-top: 1em;
+  max-width: 97vw;
+}
+
+.aside {
   padding-top: 2em;
   padding-left: 2em;
 }
 
-.projects {
+.aside_title_container {
+  padding: 1em;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.aside-title{
   display: inline-block;
 }
 
-
+.projects {
+  display: inline-block;
+  padding: 1em;
+}
 
 .main {
   background-color: #eceff1;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.5);
-  margin-top: 1em;
+  margin: 1em;
+}
+
+.card-container {
+  padding: 1em;
 }
 
 .single-card {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 1em;
 }
 
 .create-input {
   border: 3px solid #ccc;
+  display: block;
 }
 
 #create-card-input {
   height: 1em;
+}
+
+h3 {
+  display: inline-block;
 }
 
 #each-card {
@@ -95,6 +99,12 @@ title {
   background-color: #eceff1;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.5);
 }
+
+.task-container {
+  display: flex;
+  align-items: center;
+}
+
 textarea {
   border: 1px solid #ddd;
   border-radius: 4px;

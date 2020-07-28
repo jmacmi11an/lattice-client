@@ -39,8 +39,8 @@ Lessons Learned:
 
 Future Goals:
 
-[ ] Renaming of Components, states, props, and functions. There were many instances in building this application where the need element would arise. Before thinking about the full scope of a new element we would proceed with naming and writing it. Only as we used these elements more extensively, often nested or passed up or down many generations did we realize just how confusing or vague our naming was. Following standard or much more descriptive naming conventions could have solved many problems.
-[ ] Allow editing of all four databases.
+[  ] Renaming of Components, states, props, and functions. There were many instances in building this application where the need element would arise. Before thinking about the full scope of a new element we would proceed with naming and writing it. Only as we used these elements more extensively, often nested or passed up or down many generations did we realize just how confusing or vague our naming was. Following standard or much more descriptive naming conventions could have solved many problems.
+[  ] Allow editing of all four databases.
 [ ] Allow deleting of cards and tasks.
 [ ] Clean up pieces of dead code.
 [ ] Applying drag and drop capabilities. This was always on our stretch list, but time constraints kept us from implementing the code. Ideally we would like to be able to drag and drop tasks within their cards, and even between cards within single projects.

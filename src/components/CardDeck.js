@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Task from './Task'
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 // import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 // import CardActions from '@material-ui/core/CardActions';
@@ -39,18 +42,21 @@ class CardDeck extends Component {
     // console.log(this.props.projectCards.cards)
     return(
       <div className="main">
-        <CardContent class="single-card">
+        <CardContent class="card-container">
           <CardForm onBlur={ this.saveCardDetailCreate }/>
+            <div class="single-card">
             { this.props.projectCards && this.props.projectCards.cards && this.props.projectCards.cards.map((c, i) =>
               <div id="each-card">
                 <h3 key={ c.id }>{c.name}</h3>
-                <button>
-                  Delete this Card
-                </button>
+                <IconButton aria-label="delete">
+                  <DeleteIcon />
+                </IconButton>
                 <SingleTask cardIndex={i} cards={this.props.projectCards}/>
                 <Task cardIndex={i} updateTasks={this.props.updateTasks}/>
               </div>
             )}
+            </div>
+
         </CardContent>
       </div>
     );
@@ -82,7 +88,6 @@ class CardForm extends Component {
           class="create-input"
           placeholder="Add new card"
           required
-          cols="30" rows="1"
           onChange={ this._handleCardChange }
           onBlur={ this._handleCardSubmit }
           value={this.state.cardDetailChanged}>
@@ -93,14 +98,14 @@ class CardForm extends Component {
 
 class SingleTask extends Component {
   render(props) {
-    // console.log(this.props.cardIndex)
-    // console.log(this.props.cards.cards[0].tasks) //these are tasks
     return(
       <div>
         {this.props.cards.cards[this.props.cardIndex].tasks.map((t) =>
-          <div>
+          <div class="task-container">
             <textarea key={t.id}>{t.description}</textarea>
-            <button>Delete this task</button>
+            <IconButton aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
           </div>
         )}
       </div>

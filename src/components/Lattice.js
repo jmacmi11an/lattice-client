@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import CardDeck from './CardDeck'
+
 //from here is new and is just styling
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import TextField from '@material-ui/core/TextField';
-// import { makeStyles } from '@material-ui/core/styles';
+import Icon from '@material-ui/core/Icon';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-// import Divider from '@material-ui/core/Divider';
-
 
 // const SERVER_URL_PROJECTS = 'http://localhost:3000/projects'
-const SERVER_URL_PROJECTS = 'https://lattice-server.herokuapp.com/projects'
-
+const SERVER_URL_PROJECTS = 'https://lattice-server.herokuapp.com/projects';
 
 class Lattice extends Component {
   constructor() {
@@ -62,10 +63,6 @@ class Lattice extends Component {
     }));this.fetchProjects()
   }
 
-  // addCard(card, project_id){
-  //   this.setState()
-  // }
-
   saveProject(data) {
       axios.post(SERVER_URL_PROJECTS, {name: data}, {withCredentials: true}).then((res) => {
         this.setState({name: res.data})
@@ -74,7 +71,6 @@ class Lattice extends Component {
     }
 
   changeCurrentlyRendering(index){
-    // console.log(this.state.name[index])
     this.setState({name: this.state.name, currentlyRendering: this.state.name[index]})
   }
 
@@ -93,27 +89,28 @@ class Lattice extends Component {
     })
   }
 
-
-
   render() {
     return(
-      <div class="main-aside">
-        <h1>Projects</h1>
-        <ProjectForm onSubmit={ this.saveProject } />
-        <ProjectList
-          pickProject={ this.changeCurrentlyRendering}
-          name={ this.state.name }
-          projectInFocus={ this.state.currentlyRendering }
-          updateTasks={this.changeCurrentlyRenderingTasks}
-          updateCards={this.changeCurrentlyRenderingCards}
-          deleteProject={this.deleteProject}
-        />
+      <div class="aside">
+        <div className="aside_title_container">
+          <ProjectForm
+            onSubmit={ this.saveProject }
+            className="aside-form" />
+        </div>
+
+          <ProjectList
+            pickProject={ this.changeCurrentlyRendering}
+            name={ this.state.name }
+            projectInFocus={ this.state.currentlyRendering }
+            updateTasks={this.changeCurrentlyRenderingTasks}
+            updateCards={this.changeCurrentlyRenderingCards}
+            deleteProject={this.deleteProject}
+          />
+
       </div>
     );
   }
 }
-
-
 
 class ProjectForm extends Component {
   constructor() {
@@ -134,13 +131,18 @@ class ProjectForm extends Component {
     this.setState({newProject: ''});
   }
 
-
   render() {
     return (
       <form onSubmit={ this._handleSubmit }>
-        <TextField id="outlined-basic" variant="outlined" value={ this.state.newProject } onChange={ this._handleChange } placeholder="Remodel the Kitchen" required />
-        <Button variant="contained" type="submit" color="primary"> Add Project
-        </Button>
+        <TextField
+          id="standard-basic"
+          value={ this.state.newProject }
+          onChange={ this._handleChange }
+          placeholder="Remodel the Kitchen"
+          required />
+          <IconButton type="submit">
+            <Icon>add_circle</Icon>
+          </IconButton>
       </form>
     );
   }
@@ -148,44 +150,32 @@ class ProjectForm extends Component {
 
 const ProjectList = (props) => {
   return (
-  <List component="nav">
+  <List component="nav" className="main_aside">
     <div class="projects">
         { props.name.map( (p, i) =>
-          <div >
-            <ListItem button onClick={ () => props.pickProject(i) } key={ p.id }>
-              <ListItemText primary={ p.name}/ >
+          <div>
+            <ListItem
+              button
+              onClick={ () => props.pickProject(i) }
+              key={ p.id }>
+              <ListItemText
+              primary={ p.name} />
+               <IconButton aria-label="delete">
+                 <DeleteIcon />
+               </IconButton>
             </ListItem>
-            <button onClick={ () => props.deleteProject(p.id)}>Delete this project</button>
+
           </div> )}
+    </div>
         <CardDeck
           allCards={props.name}
           projectCards={ props.projectInFocus }
           updateTasks={props.updateTasks}
           updateCards={props.updateCards}
         />
-    </div>
+
   </List>
   );
 };
 
 export default Lattice;
-
-
-
-/*
-  line 104: deleteClick={ this._handleDelete }
-
-  <CardDeck info={this.state.currentlyRendering}
-      the buttons
-  <Card project={p.cards}/>
-  */
-// <button key={ p.project.id }>{ p.project.name }</button>
-
-
-//         <input
-//           value={ this.state.newProject }
-//           onChange={ this._handleChange }
-//           placeholder="Add new project"
-//           required
-//         />
-//         <input type="submit" value="Add"/>
